@@ -1,0 +1,21 @@
+# --- Защита секретов ---
+<FilesMatch "(^\.|config\.php$|\.example\.php$)">
+    Require all denied
+</FilesMatch>
+
+# Запретить листинг директорий
+Options -Indexes
+
+# Индексный файл
+DirectoryIndex index.php
+
+# --- SSE (отключить gzip/deflate для console.php, иначе лог не будет идти в реальном времени) ---
+<IfModule mod_env.c>
+    SetEnvIfNoCase Request_URI "console\.php" no-gzip
+    SetEnvIfNoCase Request_URI "console\.php" dont-vary
+</IfModule>
+
+# Включить mod_deflate, но исключить console.php
+<IfModule mod_deflate.c>
+    SetEnvIfNoCase Request_URI "console\.php" no-gzip dont-vary
+</IfModule>

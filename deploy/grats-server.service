@@ -1,0 +1,28 @@
+## ====================================================================
+## systemd unit — автозапуск самого SAMP/open.mp сервера в screen.
+## Гарантирует, что сервер поднимется после ребута VDS.
+##
+## Установка:
+##   sudo cp deploy/grats-server.service /etc/systemd/system/grats-server.service
+##   sudo systemctl daemon-reload
+##   sudo systemctl enable --now grats-server
+## ====================================================================
+[Unit]
+Description=Grats Online (open.mp) game server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+User=omp
+Group=omp
+WorkingDirectory=/home/omp/Server
+# Запуск в detached screen-сессии с именем "omp" (то же имя, что в config.php)
+ExecStart=/usr/bin/screen -dmS omp /home/omp/Server/server-13
+ExecStop=/usr/bin/screen -S omp -X quit
+Restart=on-failure
+RestartSec=10
+KillMode=none
+
+[Install]
+WantedBy=multi-user.target

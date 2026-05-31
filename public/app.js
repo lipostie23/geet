@@ -1,9 +1,8 @@
-/* GRATS ONLINE control panel — frontend logic (vanilla JS) */
+/* GRATS ONLINE control panel — frontend (vanilla JS, без зависимостей) */
 (() => {
   "use strict";
 
   const $ = (sel) => document.querySelector(sel);
-
   const els = {
     login: $("#login"),
     loginForm: $("#loginForm"),
@@ -11,27 +10,21 @@
     loginBtn: $("#loginBtn"),
     dashboard: $("#dashboard"),
     logoutBtn: $("#logoutBtn"),
-
     connDot: $("#connDot"),
     connText: $("#connText"),
     serverAddr: $("#serverAddr"),
-
     cardStatus: $("#cardStatus"),
     cardPlayers: $("#cardPlayers"),
     cardMode: $("#cardMode"),
     cardPing: $("#cardPing"),
-
     procDot: $("#procDot"),
     procText: $("#procText"),
-    metaName: $("#metaName"),
     metaLang: $("#metaLang"),
-
     console: $("#console"),
     autoscroll: $("#autoscroll"),
     clearBtn: $("#clearBtn"),
     cmdForm: $("#cmdForm"),
     cmdInput: $("#cmdInput"),
-
     toast: $("#toast"),
   };
 
@@ -43,6 +36,7 @@
   async function api(path, opts = {}) {
     const res = await fetch(path, {
       headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
       ...opts,
     });
     let data = {};
@@ -57,7 +51,7 @@
     toast._t = setTimeout(() => (els.toast.className = "toast " + kind), 3200);
   }
 
-  function pad(n) { return String(n).padStart(2, "0"); }
+  const pad = (n) => String(n).padStart(2, "0");
   function stamp() {
     const d = new Date();
     return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
@@ -66,8 +60,8 @@
   function classifyLine(text) {
     const t = text.toLowerCase();
     if (/\[panel\]|^\s*\[server\]|loaded|started|init/.test(t)) return "sys";
-    if (/error|fail|exception|cannot|denied/.test(t)) return "err";
-    if (/warn|deprecat/.test(t)) return "warn";
+    if (/error|fail|exception|cannot|denied/.test(t))            return "err";
+    if (/warn|deprecat/.test(t))                                  return "warn";
     return "";
   }
 
@@ -80,7 +74,6 @@
     line.appendChild(ts);
     line.appendChild(document.createTextNode(text));
     els.console.appendChild(line);
-
     while (els.console.children.length > MAX_LINES) {
       els.console.removeChild(els.console.firstChild);
     }
@@ -94,7 +87,7 @@
     e.preventDefault();
     els.loginError.textContent = "";
     els.loginBtn.disabled = true;
-    const { status, data } = await api("/api/login", {
+    const { status, data } = await api("/api/login.php", {
       method: "POST",
       body: JSON.stringify({
         user: $("#user").value,
@@ -110,7 +103,7 @@
   });
 
   els.logoutBtn.addEventListener("click", async () => {
-    await api("/api/logout", { method: "POST" });
+    await api("/api/logout.php", { method: "POST" });
     leaveDashboard();
   });
 
@@ -128,15 +121,15 @@
   function leaveDashboard() {
     els.dashboard.classList.add("hidden");
     els.login.classList.remove("hidden");
-    if (evtSource) { evtSource.close(); evtSource = null; }
-    if (statusTimer) { clearInterval(statusTimer); statusTimer = null; }
+    if (evtSource)  { evtSource.close();        evtSource = null; }
+    if (statusTimer){ clearInterval(statusTimer); statusTimer = null; }
     $("#password").value = "";
   }
 
   // ---------- live console (SSE) ----------
   function openConsoleStream() {
     if (evtSource) evtSource.close();
-    evtSource = new EventSource("/api/console");
+    evtSource = new EventSource("/api/console.php");
     evtSource.addEventListener("line", (e) => {
       try { appendLine(JSON.parse(e.data)); } catch { appendLine(e.data); }
     });
@@ -144,32 +137,29 @@
       try { appendLine(JSON.parse(e.data), "sys"); } catch {}
     });
     evtSource.onerror = () => {
-      // EventSource auto-reconnects; just note it once.
       appendLine("[panel] переподключение к лог-потоку…", "warn");
     };
   }
 
   // ---------- status polling ----------
   async function refreshStatus() {
-    const { status, data } = await api("/api/status");
+    const { status, data } = await api("/api/status.php");
     if (status === 401) return leaveDashboard();
     if (!data.ok) return;
 
     els.serverAddr.textContent = `${data.server.ip}:${data.server.port}`;
-    els.metaName.textContent = data.server.name || "—";
 
     const q = data.query || {};
     const online = !!q.online;
-
     els.connDot.className = "conn-dot " + (online ? "on" : "off");
     els.connText.textContent = online ? "Сервер онлайн" : "Сервер оффлайн";
 
     els.cardStatus.textContent = online ? "Онлайн" : "Оффлайн";
     els.cardStatus.style.color = online ? "var(--green)" : "var(--red)";
     els.cardPlayers.textContent = online ? `${q.players} / ${q.maxPlayers}` : "—";
-    els.cardMode.textContent = online ? (q.gamemode || "—") : "—";
-    els.cardPing.textContent = online && q.ping != null ? `${q.ping} мс` : "—";
-    els.metaLang.textContent = online ? (q.language || "—") : "—";
+    els.cardMode.textContent    = online ? (q.gamemode || "—") : "—";
+    els.cardPing.textContent    = online && q.ping != null ? `${q.ping} мс` : "—";
+    els.metaLang.textContent    = online ? (q.language || "—") : "—";
 
     const sc = data.screen || {};
     const running = !!sc.running;
@@ -182,25 +172,29 @@
     btn.addEventListener("click", async () => {
       const action = btn.dataset.action;
       const labels = { start: "Запуск", stop: "Остановка", restart: "Рестарт" };
-      if (action === "stop" && !confirm("Остановить сервер grats online?")) return;
-      if (action === "restart" && !confirm("Перезапустить сервер grats online?")) return;
+      if (action === "stop"    && !confirm("Остановить сервер?"))   return;
+      if (action === "restart" && !confirm("Перезапустить сервер?")) return;
 
-      document.querySelectorAll(".control-btns .btn").forEach((b) => (b.disabled = true));
+      const all = document.querySelectorAll(".control-btns .btn");
+      all.forEach((b) => (b.disabled = true));
       toast(`${labels[action]}…`);
       appendLine(`[panel] выполняется: ${labels[action]}`, "sys");
 
-      const { status, data } = await api("/api/action", {
+      const { status, data } = await api("/api/action.php", {
         method: "POST",
         body: JSON.stringify({ action }),
       });
-      document.querySelectorAll(".control-btns .btn").forEach((b) => (b.disabled = false));
+      all.forEach((b) => (b.disabled = false));
 
       if (status === 401) return leaveDashboard();
       if (data.ok) {
         toast(`${labels[action]}: готово`, "ok");
+        if (data.result && data.result.output) {
+          appendLine(`[panel] ${data.result.output}`, "sys");
+        }
       } else {
         toast(`Ошибка: ${data.error || "неизвестно"}`, "err");
-        appendLine(`[panel] ошибка действия: ${data.error || ""}`, "err");
+        appendLine(`[panel] ошибка: ${data.error || ""}`, "err");
       }
       setTimeout(refreshStatus, 1500);
     });
@@ -213,14 +207,12 @@
     if (!command) return;
     appendLine(`> ${command}`, "sys");
     els.cmdInput.value = "";
-    const { status, data } = await api("/api/command", {
+    const { status, data } = await api("/api/command.php", {
       method: "POST",
       body: JSON.stringify({ command }),
     });
     if (status === 401) return leaveDashboard();
-    if (!data.ok) {
-      toast(`Команда не отправлена: ${data.error || ""}`, "err");
-    }
+    if (!data.ok) toast(`Команда не отправлена: ${data.error || ""}`, "err");
   });
 
   els.clearBtn.addEventListener("click", () => {
@@ -228,9 +220,9 @@
     appendLine("[panel] консоль очищена (локально)", "sys");
   });
 
-  // ---------- boot: check existing session ----------
+  // ---------- boot: проверить, не залогинены ли уже ----------
   (async function boot() {
-    const { status } = await api("/api/status");
+    const { status } = await api("/api/status.php");
     if (status === 200) enterDashboard();
   })();
 })();
