@@ -1,0 +1,25 @@
+{
+  "panel": {
+    "host": "0.0.0.0",
+    "port": 8080,
+    "user": "admin",
+    "password": "change-me-please",
+    "sessionSecret": "change-this-to-a-long-random-string"
+  },
+  "server": {
+    "name": "grats online",
+    "ip": "0.0.0.0",
+    "port": 7777,
+    "rconPassword": ""
+  },
+  "ssh": {
+    "host": "0.0.0.0",
+    "port": 22,
+    "user": "root",
+    "password": "your-ssh-password",
+    "serverPath": "/home/omp/Server",
+    "screenName": "omp",
+    "executable": "server-13",
+    "logFile": "log.txt"
+  }
+}

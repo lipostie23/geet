@@ -1,0 +1,15 @@
+{
+  "name": "grats-panel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Web control panel for the SA-MP / open.mp server \"grats online\" running on a VDS. Live console from log.txt, start/stop/restart over SSH, dark gaming UI.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {}
+}

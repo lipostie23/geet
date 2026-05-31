@@ -1,0 +1,24 @@
+# Secrets / runtime config (contains SSH password!)
+config.json
+*.local.json
+.env
+.env.local
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Logs / runtime
+*.log
+logs/
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0b14" />
+  <title>GRATS ONLINE — Панель управления</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>" />
+</head>
+<body>
+  <!-- animated background -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <!-- ===== LOGIN ===== -->
+  <section id="login" class="login-wrap">
+    <form id="loginForm" class="login-card" autocomplete="off">
+      <div class="login-logo">
+        <span class="logo-mark">G</span>
+        <div class="logo-text">
+          <b>GRATS</b><span>ONLINE</span>
+        </div>
+      </div>
+      <h1>Панель управления</h1>
+      <p class="login-sub">Авторизуйтесь для доступа к серверу</p>
+
+      <label class="field">
+        <span>Логин</span>
+        <input id="user" type="text" name="user" placeholder="admin" required />
+      </label>
+      <label class="field">
+        <span>Пароль</span>
+        <input id="password" type="password" name="password" placeholder="••••••••" required />
+      </label>
+
+      <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+        <span>Войти</span>
+      </button>
+      <div id="loginError" class="login-error"></div>
+    </form>
+  </section>
+
+  <!-- ===== DASHBOARD ===== -->
+  <main id="dashboard" class="dash hidden">
+    <!-- top bar -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo-mark sm">G</span>
+        <div class="brand-text">
+          <b>GRATS ONLINE</b>
+          <small id="serverAddr">185.56.162.235:7777</small>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div id="connDot" class="conn-dot" title="Состояние сервера"></div>
+        <span id="connText" class="conn-text">проверка…</span>
+        <button id="logoutBtn" class="btn btn-ghost">Выйти</button>
+      </div>
+    </header>
+
+    <!-- status cards -->
+    <section class="cards">
+      <div class="card stat">
+        <div class="stat-icon">📡</div>
+        <div class="stat-body">
+          <span class="stat-label">Статус</span>
+          <span class="stat-value" id="cardStatus">—</span>
+        </div>
+      </div>
+      <div class="card stat">
+        <div class="stat-icon">👥</div>
+        <div class="stat-body">
+          <span class="stat-label">Игроки</span>
+          <span class="stat-value" id="cardPlayers">—</span>
+        </div>
+      </div>
+      <div class="card stat">
+        <div class="stat-icon">🗺️</div>
+        <div class="stat-body">
+          <span class="stat-label">Режим</span>
+          <span class="stat-value" id="cardMode">—</span>
+        </div>
+      </div>
+      <div class="card stat">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-body">
+          <span class="stat-label">Пинг</span>
+          <span class="stat-value" id="cardPing">—</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- controls + console -->
+    <section class="grid">
+      <!-- control panel -->
+      <aside class="card control">
+        <h2 class="card-title">Управление</h2>
+        <div class="control-state">
+          <span class="dot" id="procDot"></span>
+          <span id="procText">screen: проверка…</span>
+        </div>
+        <div class="control-btns">
+          <button class="btn btn-start" data-action="start">▶ Запустить</button>
+          <button class="btn btn-restart" data-action="restart">⟳ Рестарт</button>
+          <button class="btn btn-stop" data-action="stop">■ Остановить</button>
+        </div>
+        <div class="control-meta">
+          <div><span>Имя:</span><b id="metaName">grats online</b></div>
+          <div><span>Скрин:</span><b>omp</b></div>
+          <div><span>Файл:</span><b>server-13</b></div>
+          <div><span>Язык:</span><b id="metaLang">—</b></div>
+        </div>
+      </aside>
+
+      <!-- console -->
+      <div class="card console-card">
+        <div class="console-head">
+          <h2 class="card-title">Консоль сервера <small>· log.txt</small></h2>
+          <div class="console-tools">
+            <label class="switch">
+              <input type="checkbox" id="autoscroll" checked />
+              <span>Автопрокрутка</span>
+            </label>
+            <button id="clearBtn" class="btn btn-ghost btn-sm">Очистить</button>
+          </div>
+        </div>
+        <div id="console" class="console" aria-live="polite"></div>
+        <form id="cmdForm" class="cmd-bar">
+          <span class="cmd-prompt">&gt;</span>
+          <input id="cmdInput" type="text" placeholder="Введите RCON / консольную команду и нажмите Enter" autocomplete="off" />
+          <button type="submit" class="btn btn-primary btn-sm">Отправить</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="foot">
+      GRATS ONLINE control panel · обновление статуса каждые 5 сек · лог в реальном времени
+    </footer>
+  </main>
+
+  <!-- toast -->
+  <div id="toast" class="toast"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
