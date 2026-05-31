@@ -1,4 +1,4 @@
-/* ======= GRATS ONLINE control panel — dark gaming theme ======= */
+/* ======= GRATS ONLINE control panel — dark gaming theme (core-bonus.ru style) ======= */
 :root {
   --bg: #0a0a12;
   --bg-2: #0e0e1c;
@@ -20,7 +20,6 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 html, body {
   height: 100%;
   background: var(--bg);
@@ -28,7 +27,6 @@ html, body {
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
 }
-
 body { position: relative; overflow-x: hidden; min-height: 100vh; }
 
 /* ---- animated background ---- */
@@ -55,17 +53,11 @@ body { position: relative; overflow-x: hidden; min-height: 100vh; }
 .hidden { display: none !important; }
 
 /* ===================== LOGIN ===================== */
-.login-wrap {
-  min-height: 100vh;
-  display: grid; place-items: center;
-  padding: 24px;
-}
+.login-wrap { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
 .login-card {
   width: 100%; max-width: 400px;
-  background: var(--panel);
-  backdrop-filter: blur(18px);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--panel); backdrop-filter: blur(18px);
+  border: 1px solid var(--border); border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 36px 32px 30px;
   animation: rise .5s cubic-bezier(.2,.8,.2,1);
@@ -101,11 +93,7 @@ body { position: relative; overflow-x: hidden; min-height: 100vh; }
   outline:none; border-color:var(--border-strong);
   box-shadow:0 0 0 3px rgba(124,92,255,.18);
 }
-
-.login-error {
-  margin-top:14px; min-height:18px; text-align:center;
-  color:var(--red); font-size:13px;
-}
+.login-error { margin-top:14px; min-height:18px; text-align:center; color:var(--red); font-size:13px; }
 
 /* ===================== BUTTONS ===================== */
 .btn {
@@ -155,9 +143,12 @@ body { position: relative; overflow-x: hidden; min-height: 100vh; }
 .conn-dot.on  { background:var(--green); box-shadow:0 0 12px var(--green); animation:pulse 2s infinite; }
 .conn-dot.off { background:var(--red); box-shadow:0 0 12px var(--red); }
 .conn-text { font-size:13px; color:var(--muted); min-width:96px; }
-@keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(46,230,160,.5);} 70%{box-shadow:0 0 0 8px rgba(46,230,160,0);} 100%{box-shadow:0 0 0 0 rgba(46,230,160,0);} }
+@keyframes pulse {
+  0%{box-shadow:0 0 0 0 rgba(46,230,160,.5);}
+  70%{box-shadow:0 0 0 8px rgba(46,230,160,0);}
+  100%{box-shadow:0 0 0 0 rgba(46,230,160,0);}
+}
 
-/* status cards */
 .cards { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:18px 0; }
 .card {
   background:var(--panel); backdrop-filter:blur(14px);
@@ -171,7 +162,6 @@ body { position: relative; overflow-x: hidden; min-height: 100vh; }
 .stat-label { font-size:12px; color:var(--muted); letter-spacing:.4px; }
 .stat-value { font-size:21px; font-weight:700; margin-top:2px; }
 
-/* grid: control + console */
 .grid { display:grid; grid-template-columns:300px 1fr; gap:14px; }
 .card-title { font-size:15px; letter-spacing:.4px; margin-bottom:14px; }
 .card-title small { color:var(--muted); font-weight:400; }
@@ -194,7 +184,6 @@ body { position: relative; overflow-x: hidden; min-height: 100vh; }
 .control-meta span { color:var(--muted); }
 .control-meta b { font-family:var(--mono); color:var(--accent-2); }
 
-/* console */
 .console-card { display:flex; flex-direction:column; min-height:560px; padding:18px; }
 .console-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:10px; }
 .console-tools { display:flex; align-items:center; gap:14px; }
@@ -211,9 +200,9 @@ body { position: relative; overflow-x: hidden; min-height: 100vh; }
 .console::-webkit-scrollbar { width:9px; }
 .console::-webkit-scrollbar-thumb { background:rgba(124,92,255,.4); border-radius:8px; }
 .console-line { display:block; }
-.console-line.sys { color:var(--accent-2); }
+.console-line.sys  { color:var(--accent-2); }
 .console-line.warn { color:var(--orange); }
-.console-line.err { color:var(--red); }
+.console-line.err  { color:var(--red); }
 .console-line .tstamp { color:#5b5b78; }
 
 .cmd-bar { display:flex; align-items:center; gap:8px; margin-top:12px; }
@@ -227,7 +216,6 @@ body { position: relative; overflow-x: hidden; min-height: 100vh; }
 
 .foot { text-align:center; color:var(--muted); font-size:12px; margin-top:22px; }
 
-/* toast */
 .toast {
   position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px);
   background:var(--panel-solid); border:1px solid var(--border-strong);
@@ -239,7 +227,6 @@ body { position: relative; overflow-x: hidden; min-height: 100vh; }
 .toast.err { border-color:var(--red); }
 .toast.ok  { border-color:var(--green); }
 
-/* responsive */
 @media (max-width: 900px) {
   .cards { grid-template-columns:repeat(2,1fr); }
   .grid { grid-template-columns:1fr; }

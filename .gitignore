@@ -1,18 +1,16 @@
-# Secrets / runtime config (contains SSH password!)
-config.json
-*.local.json
-.env
-.env.local
-
-# Node
-node_modules/
-npm-debug.log*
-yarn-error.log*
+# Secrets — НИКОГДА не коммитить (содержит пароли SSH и хеш админа)
+config.php
+*.local.php
 
 # Logs / runtime
 *.log
 logs/
+sessions/
 .cache/
+
+# Composer (на случай если будут плагины)
+vendor/
+composer.lock
 
 # OS
 .DS_Store
